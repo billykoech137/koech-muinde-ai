@@ -1,14 +1,57 @@
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
-import { useState } from "react";
+import { Menu, LogOut, User as UserIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
+import { User, Session } from "@supabase/supabase-js";
+import { useToast } from "@/hooks/use-toast";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+    );
+
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     element?.scrollIntoView({ behavior: "smooth" });
     setIsOpen(false);
+  };
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Logged out",
+        description: "You have been successfully logged out.",
+      });
+      setIsOpen(false);
+    }
   };
 
   return (
@@ -41,7 +84,20 @@ const Navbar = () => {
             >
               Team
             </button>
-            <Button onClick={() => scrollToSection("contact")}>Get Started</Button>
+            {user ? (
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 text-sm">
+                  <UserIcon className="h-4 w-4 text-primary" />
+                  <span className="text-muted-foreground">{user.email}</span>
+                </div>
+                <Button variant="outline" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button onClick={() => navigate("/auth")}>Sign In</Button>
+            )}
           </div>
 
           <button className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
@@ -69,9 +125,21 @@ const Navbar = () => {
             >
               Team
             </button>
-            <Button className="w-full" onClick={() => scrollToSection("contact")}>
-              Get Started
-            </Button>
+            {user ? (
+              <>
+                <div className="px-3 py-2 text-sm text-muted-foreground border rounded-md">
+                  {user.email}
+                </div>
+                <Button variant="outline" className="w-full" onClick={handleLogout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Button className="w-full" onClick={() => navigate("/auth")}>
+                Sign In
+              </Button>
+            )}
           </div>
         )}
       </div>
