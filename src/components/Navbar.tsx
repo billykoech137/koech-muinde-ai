@@ -124,7 +124,7 @@ const Navbar = () => {
               className="block w-full text-left text-foreground hover:text-primary transition-colors"
             >
               Team
-            </button>
+            {/* </button>
             {user ? (
               <>
                 <div className="px-3 py-2 text-sm text-muted-foreground border rounded-md">
@@ -138,7 +138,7 @@ const Navbar = () => {
             ) : (
               <Button className="w-full" onClick={() => navigate("/auth")}>
                 Sign In
-              </Button>
+              </Button> */}
             )}
           </div>
         )}
