@@ -96,7 +96,7 @@ const Navbar = () => {
                 </Button>
               </div>
             ) : (
-              <Button onClick={() => navigate("/auth")}>Sign In</Button>
+              /*<Button onClick={() => navigate("/auth")}>Sign In</Button>*/
             )}
           </div>
 
@@ -124,7 +124,7 @@ const Navbar = () => {
               className="block w-full text-left text-foreground hover:text-primary transition-colors"
             >
               Team
-            {/* </button>
+            { </button>
             {user ? (
               <>
                 <div className="px-3 py-2 text-sm text-muted-foreground border rounded-md">
@@ -135,10 +135,10 @@ const Navbar = () => {
                   Logout
                 </Button>
               </>
-            ) : (
+            /*) : (
               <Button className="w-full" onClick={() => navigate("/auth")}>
                 Sign In
-              </Button> */}
+              </Button>*/ }
             )}
           </div>
         )}
