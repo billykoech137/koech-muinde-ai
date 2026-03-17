@@ -16,7 +16,7 @@ const About = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
               Pioneering the Future of{" "}
               <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                AI & Analytics
+                AI, Data & Analytics
               </span>
             </h2>
             <p className="text-lg text-muted-foreground mb-6">
