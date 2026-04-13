@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <!-- Background gradient: deep navy → rich violet -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f1f6e"/>
+      <stop offset="55%" stop-color="#3b1fa8"/>
+      <stop offset="100%" stop-color="#6d1fcb"/>
+    </linearGradient>
+
+    <!-- Bar accent gradient: solid white → semi-transparent white -->
+    <linearGradient id="bar-fade" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.55"/>
+    </linearGradient>
+
+    <!-- Cyan glow gradient for node dots -->
+    <radialGradient id="node-glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#7c3aed"/>
+    </radialGradient>
+
+    <!-- Soft glow filter for node dots -->
+    <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="2.8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Subtle inner shadow for depth -->
+    <filter id="inner-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="4" result="s"/>
+      <feOffset dx="0" dy="2" result="o"/>
+      <feComposite in="o" in2="SourceGraphic" operator="in" result="shadow"/>
+      <feMerge>
+        <feMergeNode in="SourceGraphic"/>
+        <feMergeNode in="shadow"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- App-icon style rounded square background -->
+  <rect x="2" y="2" width="96" height="96" rx="24" fill="url(#bg)"/>
+
+  <!-- Subtle top-left highlight for depth/gloss -->
+  <rect x="2" y="2" width="96" height="48" rx="24" fill="white" opacity="0.04"/>
+
+  <!-- ── Geometric "E" spine (left vertical bar) ── -->
+  <rect x="19" y="19" width="11" height="62" rx="3.5" fill="white"/>
+
+  <!-- ── Top horizontal bar (full width) ── -->
+  <rect x="19" y="19" width="50" height="11" rx="3.5" fill="url(#bar-fade)"/>
+
+  <!-- ── Middle horizontal bar (shorter — data-bar rhythm) ── -->
+  <rect x="19" y="44.5" width="36" height="11" rx="3.5" fill="url(#bar-fade)"/>
+
+  <!-- ── Bottom horizontal bar (full width) ── -->
+  <rect x="19" y="70" width="50" height="11" rx="3.5" fill="url(#bar-fade)"/>
+
+  <!-- ── Node dots at the end of each bar — circuit / AI network feel ── -->
+
+  <!-- Top bar node -->
+  <circle cx="73" cy="24.5" r="6.5" fill="url(#node-glow)" filter="url(#glow)"/>
+  <circle cx="73" cy="24.5" r="3.5" fill="white" opacity="0.95"/>
+
+  <!-- Middle bar node -->
+  <circle cx="59" cy="50" r="6.5" fill="url(#node-glow)" filter="url(#glow)"/>
+  <circle cx="59" cy="50" r="3.5" fill="white" opacity="0.95"/>
+
+  <!-- Bottom bar node -->
+  <circle cx="73" cy="75.5" r="6.5" fill="url(#node-glow)" filter="url(#glow)"/>
+  <circle cx="73" cy="75.5" r="3.5" fill="white" opacity="0.95"/>
+
+  <!-- ── Subtle connector line linking the 3 nodes (data flow / neural edge) ── -->
+  <line x1="73" y1="24.5" x2="59" y2="50" stroke="white" stroke-width="1" stroke-dasharray="2.5 3" opacity="0.3"/>
+  <line x1="59" y1="50" x2="73" y2="75.5" stroke="white" stroke-width="1" stroke-dasharray="2.5 3" opacity="0.3"/>
+</svg>

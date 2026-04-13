@@ -59,7 +59,7 @@ const Navbar = () => {
       <div className='container mx-auto px-4'>
         <div className='flex items-center justify-between h-16'>
           <div className='flex items-center space-x-2'>
-            <div className='w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary' />
+            <img src='/logo.svg' alt='EdgePoint Insights logo' className='w-8 h-8' />
             <span className='text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent'>
               EdgePoint Insights
             </span>
@@ -77,12 +77,6 @@ const Navbar = () => {
               className='text-foreground hover:text-primary transition-colors'
             >
               About
-            </button>
-            <button
-              onClick={() => scrollToSection("founders")}
-              className='text-foreground hover:text-primary transition-colors'
-            >
-              Team
             </button>
             {/* {user ? (
               <div className='flex items-center gap-4'>
@@ -118,12 +112,6 @@ const Navbar = () => {
               className='block w-full text-left text-foreground hover:text-primary transition-colors'
             >
               About
-            </button>
-            <button
-              onClick={() => scrollToSection("founders")}
-              className='block w-full text-left text-foreground hover:text-primary transition-colors'
-            >
-              Team
             </button>
             {user ? (
               <>
