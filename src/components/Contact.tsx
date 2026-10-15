@@ -2,11 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Mail, Phone } from "lucide-react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { User, Session } from "@supabase/supabase-js";
 import { z } from "zod";
 
 const contactSchema = z.object({
@@ -17,32 +15,12 @@ const contactSchema = z.object({
 
 const Contact = () => {
   const { toast } = useToast();
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
   });
-
-  useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-      }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,30 +30,23 @@ const Contact = () => {
       // Validate form data
       const validatedData = contactSchema.parse(formData);
 
-      // Save to database
-      const { error: dbError } = await supabase.from("contacts").insert({
-        name: validatedData.name,
-        email: validatedData.email,
-        message: validatedData.message,
-        user_id: user?.id || null,
-      });
-
-      if (dbError) {
-        throw dbError;
-      }
-
-      // Send email via edge function
-      const { error: emailError } = await supabase.functions.invoke("send-contact-email", {
-        body: {
+      // Send email via Vercel serverless function (api/contact.ts)
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           name: validatedData.name,
           email: validatedData.email,
           message: validatedData.message,
-        },
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          language: navigator.language,
+          pageUrl: window.location.href,
+          referrer: document.referrer || undefined,
+        }),
       });
 
-      if (emailError) {
-        console.error("Email sending failed:", emailError);
-        // Don't throw - contact was saved to DB
+      if (!response.ok) {
+        throw new Error(`Contact request failed with status ${response.status}`);
       }
 
       toast({
@@ -95,7 +66,7 @@ const Contact = () => {
         console.error("Error submitting contact form:", error);
         toast({
           title: "Error",
-          description: "Failed to send message. Please try again.",
+          description: "Failed to send message. Please try again or email info@edgepointinsights.com directly.",
           variant: "destructive",
         });
       }
@@ -176,8 +147,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Email Us</h3>
-                    <p className="text-muted-foreground">info@aianalytics.com</p>
-                    <p className="text-muted-foreground">support@aianalytics.com</p>
+                    <p className="text-muted-foreground">info@edgepointinsights.com</p>
                   </div>
                 </div>
               </CardContent>
@@ -191,27 +161,13 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Call Us</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                    <p className="text-sm text-muted-foreground mt-1">Mon-Fri, 9AM-6PM EST</p>
+                    <p className="text-muted-foreground">+254 714 985 992 OR +254 718 356 087</p>
+                    <p className="text-sm text-muted-foreground mt-1">Mon-Fri, 9AM-6PM EAT</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary/10 to-secondary/10 flex items-center justify-center shrink-0">
-                    <MapPin className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-1">Visit Us</h3>
-                    <p className="text-muted-foreground">123 Innovation Drive</p>
-                    <p className="text-muted-foreground">Tech Hub, CA 94025</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </div>
