@@ -161,7 +161,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold mb-1">Call Us</h3>
-                    <p className="text-muted-foreground">+254 714 985 992 OR +254 718 356 087</p>
+                    <p className="text-muted-foreground">(+254) 714 985 992 or (+254) 718 356 087</p>
                     <p className="text-sm text-muted-foreground mt-1">Mon-Fri, 9AM-6PM EAT</p>
                   </div>
                 </div>
