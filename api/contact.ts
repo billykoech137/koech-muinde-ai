@@ -2,7 +2,7 @@
 // Requires the RESEND_API_KEY environment variable to be set in the Vercel project settings.
 
 const TO_EMAIL = "info@edgepointinsights.com";
-const FROM_EMAIL = "Edge Point Website <onboarding@resend.dev>";
+const FROM_EMAIL = "Edge Point Website <noreply@edgepointinsights.com>";
 
 interface ContactRequest {
   name?: unknown;
